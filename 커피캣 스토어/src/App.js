@@ -12,15 +12,14 @@ export default function App({ $target }) {
       new ProductListPage({ $target }).render();
     } else if (pathname.includes("products")) {
       const [, , , productId] = pathname.split("/");
-      console.log(productId);
       new ProductDetailPage({
         $target,
         productId,
-      }).render();
+      });
     } else if (pathname.includes("cart")) {
       new CartPage({
         $target,
-      }).render();
+      });
     }
   };
 
