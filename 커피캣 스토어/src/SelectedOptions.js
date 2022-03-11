@@ -1,4 +1,6 @@
 import { priceToString } from "./utils/format.js";
+import { push } from "./utils/router.js";
+import { getItem, setItem } from "./utils/storage.js";
 
 export default function SelectedOptions({ $target, initialState }) {
   const $component = document.createElement("div");
@@ -41,7 +43,7 @@ export default function SelectedOptions({ $target, initialState }) {
                                     ${optionName} ${priceToString(
                              product.price + optionPrice
                            )}원
-                                    <input type="text" min="1" data-optionId="${optionId}" value="${quantity}"> 
+                                    <input type="number" min="1" data-optionId="${optionId}" value="${quantity}"> 
                                 </li>
                            `
                          )
@@ -90,5 +92,23 @@ export default function SelectedOptions({ $target, initialState }) {
     }
   });
 
+  $component.addEventListener("click", (e) => {
+    const { selectedOptions } = this.state;
+    if (e.target.className === "OrderButton") {
+      const cartData = getItem("products_cart", []);
+
+      setItem(
+        "products_cart",
+        cartData.concat(
+          selectedOptions.map((selectedOption) => ({
+            productId: selectedOption.productId,
+            optionId: selectedOption.optionId,
+            quantity: selectedOption.quantity,
+          }))
+        )
+      );
+    }
+    push("/web/cart");
+  });
   this.render();
 }
