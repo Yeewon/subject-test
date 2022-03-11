@@ -41,7 +41,7 @@ export default function SelectedOptions({ $target, initialState }) {
                                     ${optionName} ${priceToString(
                              product.price + optionPrice
                            )}원
-                                    <input type="text" data-optionId="${optionId}" value="${quantity}"> 
+                                    <input type="text" min="1" data-optionId="${optionId}" value="${quantity}"> 
                                 </li>
                            `
                          )
@@ -61,10 +61,28 @@ export default function SelectedOptions({ $target, initialState }) {
     if (target.tagName === "INPUT") {
       try {
         const nextQuantity = parseInt(target.value);
-        const nectSelectedOptions = [...this.state.selectedOptions];
+        const nextSelectedOptions = [...this.state.selectedOptions];
 
         if (typeof nextQuantity === "number") {
-          console.log("숫자");
+          const { product } = this.state;
+
+          const optionId = parseInt(target.dataset.optionid);
+          const option = product.productOptions.find(
+            (option) => option.id === optionId
+          );
+          const selectedOptionIndex = nextSelectedOptions.findIndex(
+            (selectedOption) => selectedOption.optionId === optionId
+          );
+
+          nextSelectedOptions[selectedOptionIndex].quantity = Math.min(
+            nextQuantity,
+            option.stock
+          );
+
+          this.setState({
+            ...this.state,
+            selectedOptions: nextSelectedOptions,
+          });
         }
       } catch (e) {
         console.log(e);

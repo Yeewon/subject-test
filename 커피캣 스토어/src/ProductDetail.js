@@ -16,6 +16,7 @@ export default function ProductDetail({ $target, initialState }) {
 
     if (selectedOptions) {
       selectedOptions.setState({
+        product: this.state.product,
         selectedOptions: this.state.selectedOptions,
       });
     }
